@@ -1,9 +1,19 @@
 <template>
-    <div>
-        <input type="file" @change="handleImageUpload" />
-        <input type="number" v-model="selectedImageId" placeholder="Enter Image ID" />
+    <div class="grid">
+        <div class="grid-cols-3">
+            <input type="file" class="file-input file-input-bordered w-full max-w-xs"  @change="handleImageUpload"/>
+        </div>
+        <div class="md:container">
+            <input type="number" v-model="selectedImageId" placeholder="Enter Image ID" class="input input-bordered w-full max-w-xs" />
+        </div>
+        <!-- <input type="number" v-model="selectedImageId" placeholder="Enter Image ID" /> -->
         <button @click="loadImageById" class="btn btn-accent">Load Image</button>
-        <img v-if="imageUrl" :src="imageUrl" alt="Stored Image" />
+        <!-- <img v-if="imageUrl" :src="imageUrl" alt="Stored Image" /> -->
+    </div>
+    <div class="grid">
+        <div class="grid-cols-1">
+            <img v-if="imageUrl" :src="imageUrl" alt="Stored Image" class="max-w-sm rounded-lg shadow-2xl" />
+        </div>
     </div>
 </template>
 

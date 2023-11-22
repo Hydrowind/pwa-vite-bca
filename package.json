@@ -10,6 +10,7 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "idb": "^7.1.1",
     "tailwindcss": "^3.3.5",
     "vue": "^3.3.4",
@@ -25,7 +26,9 @@
   "devDependencies": {
     "@vite-pwa/assets-generator": "^0.0.10",
     "@vitejs/plugin-vue": "^4.2.3",
+    "autoprefixer": "^10.4.16",
     "daisyui": "^4.4.2",
+    "postcss": "^8.4.31",
     "vite": "^4.4.5",
     "vite-plugin-pwa": "^0.16.7"
   }

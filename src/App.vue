@@ -4,24 +4,25 @@ import ReloadPrompt from './components/ReloadPrompt.vue'
 import PokeFetch from './components/PokeFetch.vue'
 import IndexedDB from './components/IndexedDB.vue'
 import IndexDBBlob from './components/IndexDBBlob.vue'
-import Bison from './components/Bison.vue'
+import IndexedDBImage from './components/IndexedDBImage.vue'
 
 </script>
 
 <template>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
+    <!-- <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    </a> -->
+    <h1><b>PWA VUE BCA</b></h1>
   </div>
   <ReloadPrompt />
   <!-- <HelloWorld msg="Vite + Vue 8" />
   <PokeFetch /> -->
   <!-- <IndexDBBlob /> -->
-  <Bison />
+  <IndexedDBImage />
 </template>
 
 <style scoped>

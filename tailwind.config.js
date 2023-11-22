@@ -1,6 +1,12 @@
-module.exports = {
-    // ...
-    plugins: [
-        require("daisyui")
-    ],
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("daisyui"),
+  ],
 }
+
