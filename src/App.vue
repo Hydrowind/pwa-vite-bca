@@ -1,29 +1,70 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
 import ReloadPrompt from './components/ReloadPrompt.vue'
-import PokeFetch from './components/PokeFetch.vue'
-import IndexedDB from './components/IndexedDB.vue'
-import IndexDBBlob from './components/IndexDBBlob.vue'
-import IndexedDBImage from './components/IndexedDBImage.vue'
+import TodoList from './components/TodoList.vue'
+
+/* Push Notification */
+import { useWebNotification } from '@vueuse/core'
+import { onMounted } from 'vue'
+
+const options = {
+  title: 'Hello, world from VueUse!',
+  dir: 'auto',
+  lang: 'en',
+  renotify: true,
+  tag: 'test',
+}
+
+const {
+  isSupported,
+  show
+} = useWebNotification(options)
+
+onMounted(() => {
+	// Create Broadcast Channel and listen to messages sent to it
+	const broadcast = new BroadcastChannel('sw-update-channel');
+	
+	// listen from service worker
+	broadcast.onmessage = (event) => {
+	  if (event.data && event.data.type === 'CRITICAL_SW_UPDATE') {
+	    // Show "update to refresh" banner to the user.
+	    const payload = event.data.payload;
+
+      // Push Notification
+      const options = {
+        title: 'Push Notification',
+        body: event.data.payload.message,
+        dir: 'auto',
+        lang: 'en',
+        renotify: true,
+        tag: 'test',
+      }
+      
+      const { show } = useWebNotification(options)
+      
+	    // Log the payload to the console
+	    console.log(payload);
+	    show();
+	  }
+	};
+});
 
 </script>
 
 <template>
   <div>
-    <!-- <a href="https://vitejs.dev" target="_blank">
+    <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a> -->
-    <h1><b>PWA VUE BCA</b></h1>
+    </a>
+    <h1>PWA VUE TODO LIST</h1>
   </div>
   <ReloadPrompt />
-  <!-- <HelloWorld msg="Vite + Vue 8" />
-  <PokeFetch /> -->
-  <!-- <IndexDBBlob /> -->
-  <IndexedDBImage />
+  <br>
+  <TodoList />
 </template>
+
 
 <style scoped>
 .logo {

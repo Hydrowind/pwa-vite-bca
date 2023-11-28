@@ -8,34 +8,12 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      // Workbox Caching Config
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/pokeapi.co\/api\/v2\/pokemon$/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'poke-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 10 // <== 3 second for dev only
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-        ],
-      },
-
-
-      // Service Worker Config
+      /* Service Worker Config */
       strategies: 'injectManifest',
       srcDir: 'src',
-      filename: 'sw.js',
+      filename: 'service-worker.js',
 
-      
-      registerType: 'autoUpdate', // [autoUpdate, prompt]
+      registerType: 'autoUpdate',
       devOptions: {
         enabled: true
       },
@@ -77,5 +55,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
 })
