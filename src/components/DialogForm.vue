@@ -8,24 +8,24 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6" lg="12">
                 <h1>Add Step</h1>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6" lg="12">
                 <h3>To Do*</h3>
                 <input label="To Do*" required v-model="title" />
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6" lg="12">
                 <h3>Description</h3>
                 <textarea label="Description" v-model="description" />
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6" lg="12">
                 <h3>Add Image</h3>
                 <v-file-input
                   label="File input"
