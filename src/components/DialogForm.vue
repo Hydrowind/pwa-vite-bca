@@ -248,6 +248,7 @@
 
 <script setup>
 import { ref, onMounted, toRefs } from "vue";
+import ResepService from "../services/ResepService";
 
 //define variable
 const dbName = "RecipesDB";
@@ -321,42 +322,50 @@ const handleChange = (event) => {
 
 //function to add data to indexDB
 const addData = (itemAdd) => {
-  console.log(itemAdd);
-  const request = indexedDB.open(dbName, 1);
-  console.log(fileImage.value);
+  ResepService.saveStep(itemAdd)
+    .then((response) => {
+      itemAdd.id = response.id;
 
-  request.onerror = (event) => {
-    console.error("Error opening database:", event.target.error);
-  };
+      const request = indexedDB.open(dbName, 1);
+      console.log(fileImage.value);
 
-  request.onupgradeneeded = (event) => {
-    const db = event.target.result;
-    const objectStore = db.createObjectStore("Step", { keyPath: "id" });
-  };
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+      };
 
-  request.onsuccess = (event) => {
-    const db = event.target.result;
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        const objectStore = db.createObjectStore("Step", { keyPath: "id" });
+      };
 
-    const addTransaction = db.transaction("Step", "readwrite");
-    const itemObjectStore = addTransaction.objectStore("Step");
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-    const addRequest = itemObjectStore.add(itemAdd);
+        const addTransaction = db.transaction("Step", "readwrite");
+        const itemObjectStore = addTransaction.objectStore("Step");
 
-    addRequest.onsuccess = (event) => {
-      console.log("Data added successfully");
-    };
+        const addRequest = itemObjectStore.add(itemAdd);
 
-    addRequest.onerror = (event) => {
-      console.error("Error adding data", event.target.error);
-    };
+        addRequest.onsuccess = (event) => {
+          console.log("Data added successfully");
+        };
 
-    addTransaction.oncomplete = () => {
-      console.log("Add transaction completed");
-      db.close();
-    };
+        addRequest.onerror = (event) => {
+          console.error("Error adding data", event.target.error);
+        };
 
-    window.location.reload();
-  };
+        addTransaction.oncomplete = () => {
+          console.log("Add transaction completed");
+          db.close();
+        };
+
+        dialog.value = false;
+        readData();
+      }
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 };
 
 const handleSubmit = (event) => {
@@ -379,6 +388,13 @@ const handleSubmit = (event) => {
 
 //function to get data from indexdb
 const readData = () => {
+  ResepService.getResep()
+    .then((response) => {
+      console.log(response);
+    })
+    .catch(e => {
+      console.log(e);
+    });
   databaseExists(dbName, function (result) {
     if (result === true) {
       const request = indexedDB.open(dbName, 1);
@@ -437,36 +453,46 @@ const editStep = (event, item) => {
 };
 
 const editData = (itemEdit) => {
-  const request = indexedDB.open(dbName, 1);
+  ResepService.updateStep(itemEdit.id, itemEdit)
+    .then(() => {
+      console.log("update success")
+    })
+    .catch(() => {
+      console.log("update gagal")
+    })
+    .finally(() => {
+      const request = indexedDB.open(dbName, 1);
 
-  request.onerror = (event) => {
-    console.error("Error opening database:", event.target.error);
-  };
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+      };
 
-  request.onsuccess = (event) => {
-    const db = event.target.result;
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-    const updateTransaction = db.transaction("Step", "readwrite");
-    const dataObjectStore = updateTransaction.objectStore("Step");
+        const updateTransaction = db.transaction("Step", "readwrite");
+        const dataObjectStore = updateTransaction.objectStore("Step");
 
-    const updateRequest = dataObjectStore.put(itemEdit);
+        const updateRequest = dataObjectStore.put(itemEdit);
 
-    updateRequest.onsuccess = (event) => {
-      console.log(itemEdit);
-      console.log("Data updated successfully: ");
-    };
+        updateRequest.onsuccess = (event) => {
+          console.log(itemEdit);
+          console.log("Data updated successfully: ");
+        };
 
-    updateRequest.onerror = (event) => {
-      console.error("Error updating data", event.target.error);
-    };
+        updateRequest.onerror = (event) => {
+          console.error("Error updating data", event.target.error);
+        };
 
-    updateTransaction.oncomplete = () => {
-      console.log("Update transaction completed");
-      db.close();
-    };
+        updateTransaction.oncomplete = () => {
+          console.log("Update transaction completed");
+          db.close();
+        };
 
-    window.location.reload();
-  };
+        window.location.reload();
+      };
+    })
+
 };
 
 const handleEdit = (event) => {
@@ -487,37 +513,47 @@ const handleEdit = (event) => {
 
 // delete function
 const deleteData = (item) => {
-  const request = indexedDB.open(dbName, 1);
-
   const keyToDelete = item.id;
 
-  request.onerror = (event) => {
-    console.error("Error opening database:", event.target.error);
-  };
+  ResepService.deleteStep(keyToDelete)
+    .then(() => {
+      console.log("DELETE SUCCESS")
+    })
+    .catch((e) => {
+      console.log("failed to delete")
+    })
+    .finally(() => {
+      const request = indexedDB.open(dbName, 1);
 
-  request.onsuccess = (event) => {
-    const db = event.target.result;
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+      };
 
-    const deleteTransaction = db.transaction("Step", "readwrite");
-    const deleteObjectStore = deleteTransaction.objectStore("Step");
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-    const deleteRequest = deleteObjectStore.delete(keyToDelete);
+        const deleteTransaction = db.transaction("Step", "readwrite");
+        const deleteObjectStore = deleteTransaction.objectStore("Step");
 
-    deleteRequest.onsuccess = (event) => {
-      console.log("Data deleted successfully");
-    };
+        const deleteRequest = deleteObjectStore.delete(keyToDelete);
+        console.log("Deleting: " + keyToDelete)
 
-    deleteRequest.onerror = (event) => {
-      console.error("Error deleting data", event.target.error);
-    };
+        deleteRequest.onsuccess = (event) => {
+          console.log("Data deleted successfully");
+        };
 
-    deleteTransaction.oncomplete = () => {
-      console.log("Delete transaction completed");
-      db.close();
-    };
+        deleteRequest.onerror = (event) => {
+          console.error("Error deleting data", event.target.error);
+        };
 
-    window.location.reload();
-  };
+        deleteTransaction.oncomplete = () => {
+          console.log("Delete transaction completed");
+          db.close();
+        };
+
+        window.location.reload();
+      };
+    })
 };
 
 const deleteStep = (event, item) => {

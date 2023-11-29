@@ -10,33 +10,15 @@ export default defineConfig({
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.js',
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       devOptions: {
         enabled: true
       },
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/pokeapi.co\/api\/v2\/pokemon$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'auth-user-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 200 // <== 3 second for dev only
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-        ],
-      },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'My Awesome App',
-        short_name: 'MyApp',
-        description: 'My Awesome App description',
+        name: 'Resep TODO App',
+        short_name: 'Resep',
+        description: 'Project Training PWA Resep TODO',
         theme_color: '#ffffff',
 				icons: [
           {

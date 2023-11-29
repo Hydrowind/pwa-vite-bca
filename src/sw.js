@@ -4,9 +4,9 @@ import { registerRoute, setCatchHandler, setDefaultHandler } from 'workbox-routi
 import { NetworkFirst, NetworkOnly, Strategy } from 'workbox-strategies';
 // import { cache, skipWaiting } from 'workbox-sw';
 
-// import {CacheFirst} from 'workbox-strategies';
-// import {ExpirationPlugin} from 'workbox-expiration';
-// import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+import { CacheFirst } from 'workbox-strategies';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 // Give JavaScript the correct global.
 self.skipWaiting();
@@ -22,13 +22,12 @@ const data = {
 const cacheName = cacheNames.runtime;
 
 const buildStrategy = () => {
-
   if (data.race) {
     class CacheNetworkRace extends Strategy {
       async _handle(request, handler) {
         const fetchAndCachePutDone = handler.fetchAndCachePut(request);
         const cacheMatchDone = handler.cacheMatch(request);
-    
+
         return new Promise((resolve, reject) => {
           fetchAndCachePutDone.then(resolve).catch((e) => {
             if (data.debug)
@@ -64,7 +63,7 @@ const manifestURLs = manifest.map(
     const url = new URL(entry.url, self.location);
     cacheEntries.push(new Request(url.href, {
       credentials: data.credentials
-      
+
     }));
     return url.href;
   }
@@ -85,7 +84,7 @@ self.addEventListener('activate', (event) => {
       // Clean up those that are not listed in manifestURLs
       cache.keys().then((keys) => {
         keys.forEach((request) => {
-            console.log(request)
+          console.log(request)
           if (data.debug)
             console.log(`Checking cache entry to be removed: ${request.url}`);
           if (!manifestURLs.includes(request.url)) {
@@ -109,21 +108,21 @@ registerRoute(
   buildStrategy()
 );
 
-// registerRoute(
-//     /^https:\/\/pokeapi.co\/api\/v2\/pokemon$/,
-//     new CacheFirst({
-//       cacheName: 'auth-user-cache',
-//       plugins: [
-//         new ExpirationPlugin({
-//           maxEntries: 10,
-//           maxAgeSeconds: 3, // 3 seconds for development, adjust for production
-//         }),
-//         new CacheableResponsePlugin({
-//           statuses: [0, 200],
-//         }),
-//       ],
-//     })
-//   );
+registerRoute(
+  /.+\.mockapi\.io\/api.+/,
+  new NetworkFirst({
+    cacheName: 'mock-api-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 10,
+        maxAgeSeconds: 60, // 3 seconds for development, adjust for production
+      }),
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+    ],
+  })
+);
 
 setDefaultHandler(new NetworkOnly());
 
