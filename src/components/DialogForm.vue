@@ -27,15 +27,8 @@
             <v-row>
               <v-col cols="6" lg="12">
                 <h3>Add Image</h3>
-                <v-file-input
-                  label="File input"
-                  prepend-icon=""
-                  type="file"
-                  name="myImage"
-                  accept="image/*"
-                  ref="fileImage"
-                  @change="handleChange"
-                />
+                <v-file-input label="File input" prepend-icon="" type="file" name="myImage" accept="image/*"
+                  ref="fileImage" @change="handleChange" />
               </v-col>
             </v-row>
             <!-- <v-row>
@@ -90,11 +83,7 @@
                     <!-- <v-icon icon="mdi-pen" @click="editStep(event, item)" /> -->
                     <v-dialog v-model="dialog2" persistent width="1024">
                       <template v-slot:activator="{ props }">
-                        <v-icon
-                          icon="mdi-pen"
-                          v-bind="props"
-                          @click="editStep(event, item)"
-                        />
+                        <v-icon icon="mdi-pen" v-bind="props" @click="editStep(event, item)" />
                       </template>
                       <v-card>
                         <v-card-text>
@@ -113,25 +102,15 @@
                             <v-row>
                               <v-col cols="12">
                                 <h3>Description</h3>
-                                <textarea
-                                  label="Description"
-                                  v-model.lazy="description"
-                                >
+                                <textarea label="Description" v-model.lazy="description">
                                 </textarea>
                               </v-col>
                             </v-row>
                             <v-row>
                               <v-col cols="12">
                                 <h3>Add Image</h3>
-                                <v-file-input
-                                  label="File input"
-                                  prepend-icon=""
-                                  type="file"
-                                  name="myImage"
-                                  accept="image/*"
-                                  ref="fileImage"
-                                  @change="handleChange"
-                                />
+                                <v-file-input label="File input" prepend-icon="" type="file" name="myImage"
+                                  accept="image/*" ref="fileImage" @change="handleChange" />
                               </v-col>
                             </v-row>
                             <!-- <v-row>
@@ -160,54 +139,42 @@
                           </v-container>
                         </v-card-text>
                         <!-- <v-card-actions> -->
-                          <v-container>
-                            <v-spacer></v-spacer>
-                            <v-row>
-                              <v-col cols="12">
-                                <!-- <v-btn
+                        <v-container>
+                          <v-spacer></v-spacer>
+                          <v-row>
+                            <v-col cols="12">
+                              <!-- <v-btn
                                   color="blue-darken-1"
                                   variant="text"
                                   @click="viewImage()"
                                 >
                                   View Image
                                 </v-btn> -->
-                                <p class="subtitle">Previous Image</p>
-                              </v-col>
-                            </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <template v-if="prevImage !== null">
-                                  <v-img
-                                    :src="getFileImageSrc(prevImage)"
-                                    max-height="250"
-                                    class="img-list"
-                                  />
-                                </template>
-                              </v-col>
-                            </v-row>
-                          </v-container>
+                              <p class="subtitle">Previous Image</p>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12">
+                              <template v-if="prevImage !== null">
+                                <v-img :src="getFileImageSrc(prevImage)" max-height="250" class="img-list" />
+                              </template>
+                            </v-col>
+                          </v-row>
+                        </v-container>
                         <!-- </v-card-actions> -->
                         <v-card-actions>
                           <v-container>
                             <v-spacer></v-spacer>
-                            <v-btn
-                              color="blue-darken-1"
-                              variant="text"
-                              @click="
-                                (dialog2 = false),
-                                  (title = ''),
-                                  (description = ''),
-                                  (fileImage = null),
-                                  (prevImage = null)
-                              "
-                            >
+                            <v-btn color="blue-darken-1" variant="text" @click="
+                              (dialog2 = false),
+                              (title = ''),
+                              (description = ''),
+                              (fileImage = null),
+                              (prevImage = null)
+                              ">
                               Close
                             </v-btn>
-                            <v-btn
-                              color="blue-darken-1"
-                              variant="text"
-                              @click="handleEdit"
-                            >
+                            <v-btn color="blue-darken-1" variant="text" @click="handleEdit">
                               Submit
                             </v-btn>
                           </v-container>
@@ -216,26 +183,14 @@
                     </v-dialog>
                   </v-col>
                   <v-col cols="1">
-                    <v-icon
-                      icon="mdi-delete"
-                      @click="deleteStep(event, item)"
-                    />
+                    <v-icon icon="mdi-delete" @click="deleteStep(event, item)" />
                   </v-col>
                 </v-row>
               </v-list-item>
             </template>
-            <v-list-item
-              v-for="child in item.details"
-              :key="child.id"
-              sub-group
-            >
+            <v-list-item v-for="child in item.details" :key="child.id" sub-group>
               <v-list-item-content>
-                <v-img
-                  :src="getFileImageSrc(child.fileImage)"
-                  max-height="250"
-                  class="img-list"
-                  v-if="child.fileImage"
-                />
+                <v-img :src="getFileImageSrc(child.fileImage)" max-height="250" class="img-list" v-if="child.fileImage" />
                 <p class="desc-list">{{ child.description }}</p>
               </v-list-item-content>
             </v-list-item>
@@ -244,11 +199,29 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <v-snackbar
+      v-model="showToast"
+      :timeout="1500"
+    >
+      Updating Data is In Progress
+
+      <template v-slot:actions>
+        <v-btn
+          color="blue"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script setup>
 import { ref, onMounted, toRefs } from "vue";
 import ResepService from "../services/ResepService";
+import CloudinaryService from "../services/CloudinaryService";
 
 //define variable
 const dbName = "RecipesDB";
@@ -266,6 +239,9 @@ items.value = [
 const arrImg = ref([]);
 let detailData = ref([]);
 let prevImage = ref(null);
+
+let showToast = ref(false);
+
 let isNewImage = false;
 let isShow = false;
 
@@ -307,15 +283,16 @@ const handleChange = (event) => {
   //isNewImage = false;
 
   if (file) {
-    const reader = new FileReader();
+    // const reader = new FileReader();
 
-    reader.onload = (loadEvent) => {
-      const imageData = loadEvent.target.result;
-      const blob = new Blob([imageData], { type: file.type });
-      fileImage.value = blob;
-    };
+    // reader.onload = (loadEvent) => {
+    //   const imageData = loadEvent.target.result;
+    //   const blob = new Blob([imageData], { type: file.type });
+    //   fileImage.value = blob;
+    // };
 
-    reader.readAsArrayBuffer(file);
+    // reader.readAsArrayBuffer(file);
+    fileImage.value = file;
     isNewImage = true;
   }
 };
@@ -324,53 +301,68 @@ const handleChange = (event) => {
 const addData = (itemAdd) => {
   ResepService.saveStep(itemAdd)
     .then((response) => {
-      itemAdd.id = response.id;
+      // itemAdd.id = response.id;
 
-      const request = indexedDB.open(dbName, 1);
-      console.log(fileImage.value);
+      // const request = indexedDB.open(dbName, 1);
+      // console.log(fileImage.value);
 
-      request.onerror = (event) => {
-        console.error("Error opening database:", event.target.error);
-      };
+      // request.onerror = (event) => {
+      //   console.error("Error opening database:", event.target.error);
+      // };
 
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        const objectStore = db.createObjectStore("Step", { keyPath: "id" });
-      };
+      // request.onupgradeneeded = (event) => {
+      //   const db = event.target.result;
+      //   const objectStore = db.createObjectStore("Step", { keyPath: "id" });
+      // };
 
-      request.onsuccess = (event) => {
-        const db = event.target.result;
+      // request.onsuccess = (event) => {
+      //   const db = event.target.result;
 
-        const addTransaction = db.transaction("Step", "readwrite");
-        const itemObjectStore = addTransaction.objectStore("Step");
+      //   const addTransaction = db.transaction("Step", "readwrite");
+      //   const itemObjectStore = addTransaction.objectStore("Step");
 
-        const addRequest = itemObjectStore.add(itemAdd);
+      //   const addRequest = itemObjectStore.add(itemAdd);
 
-        addRequest.onsuccess = (event) => {
-          console.log("Data added successfully");
-        };
+      //   addRequest.onsuccess = (event) => {
+      //     console.log("Data added successfully");
+      //   };
 
-        addRequest.onerror = (event) => {
-          console.error("Error adding data", event.target.error);
-        };
+      //   addRequest.onerror = (event) => {
+      //     console.error("Error adding data", event.target.error);
+      //   };
 
-        addTransaction.oncomplete = () => {
-          console.log("Add transaction completed");
-          db.close();
-        };
+      //   addTransaction.oncomplete = () => {
+      //     console.log("Add transaction completed");
+      //     db.close();
+      //   };
 
-        dialog.value = false;
-        readData();
-      }
+      //   dialog.value = false;
+      //   readData();
+      // }
+      const { isSupported, show } = useWebNotification({
+        title: "Added new step to receipt",
+        dir: 'auto',
+        lang: 'en',
+        renotify: true,
+        tag: 'test',
+      });
+      dialog.value = false;
+      readData();
     })
     .catch((e) => {
       console.log(e)
     })
 };
 
-const handleSubmit = (event) => {
+const handleSubmit = async (event) => {
   const currentTime = new Date();
   const fullTime = currentTime.getTime();
+
+  let image = null;
+  if (isNewImage) {
+    image = await CloudinaryService.uploadFile(fileImage.value);
+  }
+
   let dataToAdd = {
     id: fullTime,
     title: title.value,
@@ -378,7 +370,7 @@ const handleSubmit = (event) => {
       {
         id: fullTime,
         description: description.value,
-        fileImage: isNewImage ? fileImage.value : null,
+        fileImage: image,
       },
     ],
   };
@@ -391,49 +383,52 @@ const readData = () => {
   ResepService.getResep()
     .then((response) => {
       console.log(response);
+      if (response !== null) {
+        arrImg.value = response;
+      }
     })
     .catch(e => {
       console.log(e);
     });
-  databaseExists(dbName, function (result) {
-    if (result === true) {
-      const request = indexedDB.open(dbName, 1);
+  // databaseExists(dbName, function (result) {
+  //   if (result === true) {
+  //     const request = indexedDB.open(dbName, 1);
 
-      arrImg.value = [];
+  //     arrImg.value = [];
 
-      request.onerror = (event) => {
-        console.error("Error opening database:", event.target.error);
-      };
+  //     request.onerror = (event) => {
+  //       console.error("Error opening database:", event.target.error);
+  //     };
 
-      request.onsuccess = (event) => {
-        const db = event.target.result;
+  //     request.onsuccess = (event) => {
+  //       const db = event.target.result;
 
-        const readTransaction = db.transaction("Step", "readonly");
-        const dataObjectStore = readTransaction.objectStore("Step");
+  //       const readTransaction = db.transaction("Step", "readonly");
+  //       const dataObjectStore = readTransaction.objectStore("Step");
 
-        const datasCursor = dataObjectStore.openCursor();
+  //       const datasCursor = dataObjectStore.openCursor();
 
-        datasCursor.onsuccess = (event) => {
-          const cursor = event.target.result;
+  //       datasCursor.onsuccess = (event) => {
+  //         const cursor = event.target.result;
 
-          if (cursor) {
-            arrImg.value.push(cursor.value);
-            cursor.continue();
-          } else {
-            console.log("Data read successfully");
-            db.close();
-          }
-        };
+  //         if (cursor) {
+  //           arrImg.value.push(cursor.value);
+  //           cursor.continue();
+  //         } else {
+  //           console.log("Data read successfully");
+  //           db.close();
+  //         }
+  //       };
 
-        datasCursor.onerror = (event) => {
-          console.error("Error reading data", event.target.error);
-          db.close();
-        };
-      };
-    } else {
-      console.log("DB NOT EXIST");
-    }
-  });
+  //       datasCursor.onerror = (event) => {
+  //         console.error("Error reading data", event.target.error);
+  //         db.close();
+  //       };
+  //     };
+  //   } else {
+  //     console.log("DB NOT EXIST");
+  //   }
+  // });
 };
 
 //edit function
@@ -461,36 +456,38 @@ const editData = (itemEdit) => {
       console.log("update gagal")
     })
     .finally(() => {
-      const request = indexedDB.open(dbName, 1);
+      // const request = indexedDB.open(dbName, 1);
 
-      request.onerror = (event) => {
-        console.error("Error opening database:", event.target.error);
-      };
+      // request.onerror = (event) => {
+      //   console.error("Error opening database:", event.target.error);
+      // };
 
-      request.onsuccess = (event) => {
-        const db = event.target.result;
+      // request.onsuccess = (event) => {
+      //   const db = event.target.result;
 
-        const updateTransaction = db.transaction("Step", "readwrite");
-        const dataObjectStore = updateTransaction.objectStore("Step");
+      //   const updateTransaction = db.transaction("Step", "readwrite");
+      //   const dataObjectStore = updateTransaction.objectStore("Step");
 
-        const updateRequest = dataObjectStore.put(itemEdit);
+      //   const updateRequest = dataObjectStore.put(itemEdit);
 
-        updateRequest.onsuccess = (event) => {
-          console.log(itemEdit);
-          console.log("Data updated successfully: ");
-        };
+      //   updateRequest.onsuccess = (event) => {
+      //     console.log(itemEdit);
+      //     console.log("Data updated successfully: ");
+      //   };
 
-        updateRequest.onerror = (event) => {
-          console.error("Error updating data", event.target.error);
-        };
+      //   updateRequest.onerror = (event) => {
+      //     console.error("Error updating data", event.target.error);
+      //   };
 
-        updateTransaction.oncomplete = () => {
-          console.log("Update transaction completed");
-          db.close();
-        };
+      //   updateTransaction.oncomplete = () => {
+      //     console.log("Update transaction completed");
+      //     db.close();
+      //   };
 
-        window.location.reload();
-      };
+      //   window.location.reload();
+      // };
+      dialog.value = false;
+      readData();
     })
 
 };
@@ -523,36 +520,38 @@ const deleteData = (item) => {
       console.log("failed to delete")
     })
     .finally(() => {
-      const request = indexedDB.open(dbName, 1);
+      // const request = indexedDB.open(dbName, 1);
 
-      request.onerror = (event) => {
-        console.error("Error opening database:", event.target.error);
-      };
+      // request.onerror = (event) => {
+      //   console.error("Error opening database:", event.target.error);
+      // };
 
-      request.onsuccess = (event) => {
-        const db = event.target.result;
+      // request.onsuccess = (event) => {
+      //   const db = event.target.result;
 
-        const deleteTransaction = db.transaction("Step", "readwrite");
-        const deleteObjectStore = deleteTransaction.objectStore("Step");
+      //   const deleteTransaction = db.transaction("Step", "readwrite");
+      //   const deleteObjectStore = deleteTransaction.objectStore("Step");
 
-        const deleteRequest = deleteObjectStore.delete(keyToDelete);
-        console.log("Deleting: " + keyToDelete)
+      //   const deleteRequest = deleteObjectStore.delete(keyToDelete);
+      //   console.log("Deleting: " + keyToDelete)
 
-        deleteRequest.onsuccess = (event) => {
-          console.log("Data deleted successfully");
-        };
+      //   deleteRequest.onsuccess = (event) => {
+      //     console.log("Data deleted successfully");
+      //   };
 
-        deleteRequest.onerror = (event) => {
-          console.error("Error deleting data", event.target.error);
-        };
+      //   deleteRequest.onerror = (event) => {
+      //     console.error("Error deleting data", event.target.error);
+      //   };
 
-        deleteTransaction.oncomplete = () => {
-          console.log("Delete transaction completed");
-          db.close();
-        };
+      //   deleteTransaction.oncomplete = () => {
+      //     console.log("Delete transaction completed");
+      //     db.close();
+      //   };
 
-        window.location.reload();
-      };
+      //   window.location.reload();
+      // };
+      dialog.value = false;
+      readData();
     })
 };
 
@@ -563,11 +562,24 @@ const deleteStep = (event, item) => {
 
 //render blob
 const getFileImageSrc = (fileImageRef) => {
-  return URL.createObjectURL(fileImageRef);
+  // return URL.createObjectURL(fileImageRef);
+  return fileImageRef;
 };
 
 //show data if exist on db
-onMounted(readData);
+onMounted(() => {
+  const broadcast = new BroadcastChannel('sw-update-channel');
+	
+	// listen from service worker
+	broadcast.onmessage = (event) => {
+	  if (event.data && event.data.type === 'DEMO_UPDATE_DATA') {
+      showToast.value = true;
+      readData();
+	  }
+	};
+
+  readData();
+});
 </script>
 
 <style>

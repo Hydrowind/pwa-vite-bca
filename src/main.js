@@ -16,7 +16,7 @@ const vuetify = createVuetify({
 })
 
 // const intervalMS = 60 * 60 * 1000
-const intervalMS = 20000
+const intervalMS = 1000
 
 const updateSW = registerSW({
   onRegistered(r) {

@@ -1,10 +1,7 @@
 import { cacheNames, clientsClaim } from 'workbox-core';
 import { registerRoute, setCatchHandler, setDefaultHandler } from 'workbox-routing';
-// import { StrategyHandler } from 'workbox-strategies';
 import { NetworkFirst, NetworkOnly, Strategy } from 'workbox-strategies';
-// import { cache, skipWaiting } from 'workbox-sw';
 
-import { CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
@@ -103,13 +100,26 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+const broadcast = new BroadcastChannel('sw-update-channel');
+
+self.addEventListener("push", async (event) => {
+  console.log('event:', event.data.text());
+  console.log("push")
+
+  if (event.data.text() === 'UPDATESTEP') {
+    broadcast.postMessage({
+      type: 'DEMO_UPDATE_DATA'
+    });
+  }
+});
+
 registerRoute(
   ({ url }) => manifestURLs.includes(url.href),
   buildStrategy()
 );
 
 registerRoute(
-  /.+\.mockapi\.io\/api.+/,
+  /.+[mockapi.io/api|cloudinary].+/,
   new NetworkFirst({
     cacheName: 'mock-api-cache',
     plugins: [
