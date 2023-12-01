@@ -1,9 +1,9 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  /* color-scheme: light dark; */
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -81,7 +81,7 @@ button:focus-visible {
 }
 
 .step-list {
-  background-color: grey !important;
+  background-color: white !important;
   margin: 5px;
 }
 
@@ -97,6 +97,7 @@ button:focus-visible {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+  border-radius: 10px;
 }
 
 .button-action-form{
@@ -106,6 +107,7 @@ button:focus-visible {
 
 .title-step{
   text-align: left;
+  font-weight: bold;
 }
 
 input {

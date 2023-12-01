@@ -1,222 +1,3 @@
-<template>
-  <v-row justify="center">
-    <v-dialog v-model="dialog" persistent width="1024">
-      <template v-slot:activator="{ props }">
-        <v-btn color="primary" v-bind="props"> Add Another Step </v-btn>
-      </template>
-      <v-card theme="dark">
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="6" lg="12">
-                <h1>Add Step</h1>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" lg="12">
-                <h3>To Do*</h3>
-                <input label="To Do*" required v-model="title" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" lg="12">
-                <h3>Description</h3>
-                <textarea label="Description" v-model="description" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" lg="12">
-                <h3>Add Image</h3>
-                <v-file-input label="File input" prepend-icon="" type="file" name="myImage" accept="image/*"
-                  ref="fileImage" @change="handleChange" />
-              </v-col>
-            </v-row>
-            <!-- <v-row>
-              <v-col cols="12">
-                <v-menu transition="scale-transition">
-                  <template v-slot:activator="{ props }">
-                    <v-btn block v-bind="props"> Choose Image </v-btn>
-                  </template>
-
-                  <v-list>
-                    <v-list-item
-                      v-for="(item, i) in items"
-                      :key="i"
-                      @click="menuActionClick(item.action)"
-                    >
-                    {{ i }}
-                      <v-list-item-title>{{ item.title }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-col>
-            </v-row> -->
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-container>
-            <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-              Close
-            </v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="handleSubmit">
-              Submit
-            </v-btn>
-          </v-container>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
-
-  <v-row>
-    <v-col cols="12">
-      <v-card theme="dark">
-        <v-list v-model="open">
-          <v-list-group v-for="item in arrImg" :key="item.id">
-            <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" class="step-list">
-                <v-row>
-                  <v-col cols="10">
-                    <p class="title-step">{{ item.title }}</p>
-                  </v-col>
-                  <v-col cols="1">
-                    <!-- <v-icon icon="mdi-pen" @click="editStep(event, item)" /> -->
-                    <v-dialog v-model="dialog2" persistent width="1024">
-                      <template v-slot:activator="{ props }">
-                        <v-icon icon="mdi-pen" v-bind="props" @click="editStep(event, item)" />
-                      </template>
-                      <v-card>
-                        <v-card-text>
-                          <v-container>
-                            <v-row>
-                              <v-col cols="12">
-                                <h1>Edit Step</h1>
-                              </v-col>
-                            </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <h3>To Do*</h3>
-                                <input required v-model.lazy="title" />
-                              </v-col>
-                            </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <h3>Description</h3>
-                                <textarea label="Description" v-model.lazy="description">
-                                </textarea>
-                              </v-col>
-                            </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <h3>Add Image</h3>
-                                <v-file-input label="File input" prepend-icon="" type="file" name="myImage"
-                                  accept="image/*" ref="fileImage" @change="handleChange" />
-                              </v-col>
-                            </v-row>
-                            <!-- <v-row>
-                              <v-col cols="12">
-                                <v-menu transition="scale-transition">
-                                  <template v-slot:activator="{ props }">
-                                    <v-btn block v-bind="props">
-                                      Choose Image
-                                    </v-btn>
-                                  </template>
-
-                                  <v-list>
-                                    <v-list-item
-                                      v-for="(item, i) in items"
-                                      :key="i"
-                                      @click="menuActionClick(item.action)"
-                                    >
-                                      <v-list-item-title>{{
-                                        item.title
-                                      }}</v-list-item-title>
-                                    </v-list-item>
-                                  </v-list>
-                                </v-menu>
-                              </v-col>
-                            </v-row> -->
-                          </v-container>
-                        </v-card-text>
-                        <!-- <v-card-actions> -->
-                        <v-container>
-                          <v-spacer></v-spacer>
-                          <v-row>
-                            <v-col cols="12">
-                              <!-- <v-btn
-                                  color="blue-darken-1"
-                                  variant="text"
-                                  @click="viewImage()"
-                                >
-                                  View Image
-                                </v-btn> -->
-                              <p class="subtitle">Previous Image</p>
-                            </v-col>
-                          </v-row>
-                          <v-row>
-                            <v-col cols="12">
-                              <template v-if="prevImage !== null">
-                                <v-img :src="getFileImageSrc(prevImage)" max-height="250" class="img-list" />
-                              </template>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                        <!-- </v-card-actions> -->
-                        <v-card-actions>
-                          <v-container>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue-darken-1" variant="text" @click="
-                              (dialog2 = false),
-                              (title = ''),
-                              (description = ''),
-                              (fileImage = null),
-                              (prevImage = null)
-                              ">
-                              Close
-                            </v-btn>
-                            <v-btn color="blue-darken-1" variant="text" @click="handleEdit">
-                              Submit
-                            </v-btn>
-                          </v-container>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                  </v-col>
-                  <v-col cols="1">
-                    <v-icon icon="mdi-delete" @click="deleteStep(event, item)" />
-                  </v-col>
-                </v-row>
-              </v-list-item>
-            </template>
-            <v-list-item v-for="child in item.details" :key="child.id" sub-group>
-              <v-list-item-content>
-                <v-img :src="getFileImageSrc(child.fileImage)" max-height="250" class="img-list" v-if="child.fileImage" />
-                <p class="desc-list">{{ child.description }}</p>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-group>
-        </v-list>
-      </v-card>
-    </v-col>
-  </v-row>
-
-  <v-snackbar
-      v-model="showToast"
-      :timeout="1500"
-    >
-      Updating Data is In Progress
-
-      <template v-slot:actions>
-        <v-btn
-          color="blue"
-          variant="text"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-</template>
 
 <script setup>
 import { ref, onMounted, toRefs } from "vue";
@@ -376,6 +157,7 @@ const handleSubmit = async (event) => {
   };
 
   addData(dataToAdd);
+  dialog.value = false;
 };
 
 //function to get data from indexdb
@@ -506,6 +288,7 @@ const handleEdit = (event) => {
   };
 
   editData(dataToEdit);
+  dialog2.value = false;
 };
 
 // delete function
@@ -581,6 +364,180 @@ onMounted(() => {
   readData();
 });
 </script>
+
+<template>
+  <v-row justify="center">
+    <v-col cols="12" lg="6">
+      <v-card theme="">
+        <v-list v-model="open">
+
+          <v-list-group v-for="item in arrImg" :key="item.id">
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" class="step-list">
+                <v-row>
+                  <v-col cols="10">
+                    <p class="title-step">{{ item.title }}</p>
+                  </v-col>
+                  <v-col cols="1">
+                    <v-dialog v-model="dialog2" persistent width="1024">
+                      <template v-slot:activator="{ props }">
+                        <v-icon icon="mdi-pen" v-bind="props" @click="editStep(event, item)" />
+                      </template>
+                      <v-card>
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12">
+                                <h1>Edit Step</h1>
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12">
+                                <h3>To Do*</h3>
+                                <input required v-model.lazy="title" />
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12">
+                                <h3>Description</h3>
+                                <textarea label="Description" v-model.lazy="description">
+                                </textarea>
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12">
+                                <h3>Add Image</h3>
+                                <v-file-input label="File input" prepend-icon="" type="file" name="myImage"
+                                  accept="image/*" ref="fileImage" @change="handleChange" />
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+
+                        <v-container>
+                          <v-spacer></v-spacer>
+                          <v-row>
+                            <v-col cols="12">
+                              <p class="subtitle">Previous Image</p>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12">
+                              <template v-if="prevImage !== null">
+                                <v-img :src="getFileImageSrc(prevImage)" max-height="250" class="img-list" />
+                              </template>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                        
+                        <v-card-actions>
+                          <v-container>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="
+                              (dialog2 = false),
+                              (title = ''),
+                              (description = ''),
+                              (fileImage = null),
+                              (prevImage = null)
+                              ">
+                              Close
+                            </v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="handleEdit">
+                              Submit
+                            </v-btn>
+                          </v-container>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-col>
+                  <v-col cols="1">
+                    <v-icon icon="mdi-delete" @click="deleteStep(event, item)" />
+                  </v-col>
+                </v-row>
+              </v-list-item>
+            </template>
+            
+            <v-list-item v-for="child in item.details" :key="child.id" sub-group>
+              <v-list-item-content>
+                <v-img :src="getFileImageSrc(child.fileImage)" max-height="250" class="img-list" v-if="child.fileImage" />
+                <p class="desc-list">{{ child.description }}</p>
+              </v-list-item-content>
+            </v-list-item>
+          
+          </v-list-group>
+        </v-list>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <v-row justify="center">
+    <v-dialog v-model="dialog" persistent width="1024">
+      <template v-slot:activator="{ props }">
+        <v-btn color="primary" v-bind="props"> Add Another Step </v-btn>
+      </template>
+      
+      <v-card>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <h1>Add Step</h1>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <h3>To Do*</h3>
+                <input label="To Do*" required v-model="title" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <h3>Description</h3>
+                <textarea label="Description" v-model="description" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <h3>Add Image</h3>
+                <v-file-input label="File input" prepend-icon="" type="file" name="myImage" accept="image/*"
+                  ref="fileImage" @change="handleChange" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-container>
+            <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+              Close
+            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="handleSubmit">
+              Submit
+            </v-btn>
+          </v-container>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+
+  <v-snackbar
+      v-model="showToast"
+      :timeout="1500"
+    >
+      Updating Data is In Progress
+
+      <template v-slot:actions>
+        <v-btn
+          color="blue"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+</template>
+
 
 <style>
 @import "../style.css";
