@@ -82,51 +82,52 @@ const handleChange = (event) => {
 const addData = (itemAdd) => {
   ResepService.saveStep(itemAdd)
     .then((response) => {
-      // itemAdd.id = response.id;
+      itemAdd.id = response.id;
 
-      // const request = indexedDB.open(dbName, 1);
-      // console.log(fileImage.value);
+      const request = indexedDB.open(dbName, 1);
+      console.log(fileImage.value);
 
-      // request.onerror = (event) => {
-      //   console.error("Error opening database:", event.target.error);
-      // };
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+      };
 
-      // request.onupgradeneeded = (event) => {
-      //   const db = event.target.result;
-      //   const objectStore = db.createObjectStore("Step", { keyPath: "id" });
-      // };
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        const objectStore = db.createObjectStore("Step", { keyPath: "id" });
+      };
 
-      // request.onsuccess = (event) => {
-      //   const db = event.target.result;
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-      //   const addTransaction = db.transaction("Step", "readwrite");
-      //   const itemObjectStore = addTransaction.objectStore("Step");
+        const addTransaction = db.transaction("Step", "readwrite");
+        const itemObjectStore = addTransaction.objectStore("Step");
 
-      //   const addRequest = itemObjectStore.add(itemAdd);
+        const addRequest = itemObjectStore.add(itemAdd);
 
-      //   addRequest.onsuccess = (event) => {
-      //     console.log("Data added successfully");
-      //   };
+        addRequest.onsuccess = (event) => {
+          console.log("Data added successfully");
+        };
 
-      //   addRequest.onerror = (event) => {
-      //     console.error("Error adding data", event.target.error);
-      //   };
+        addRequest.onerror = (event) => {
+          console.error("Error adding data", event.target.error);
+        };
 
-      //   addTransaction.oncomplete = () => {
-      //     console.log("Add transaction completed");
-      //     db.close();
-      //   };
+        addTransaction.oncomplete = () => {
+          console.log("Add transaction completed");
+          db.close();
+        };
 
-      //   dialog.value = false;
-      //   readData();
-      // }
-      const { isSupported, show } = useWebNotification({
-        title: "Added new step to receipt",
-        dir: 'auto',
-        lang: 'en',
-        renotify: true,
-        tag: 'test',
-      });
+        dialog.value = false;
+        const { isSupported, show } = useWebNotification({
+          title: "Added new step to receipt",
+          dir: 'auto',
+          lang: 'en',
+          renotify: true,
+          tag: 'test',
+        });
+        show();
+        readData();
+      }
       dialog.value = false;
       readData();
     })
@@ -172,45 +173,45 @@ const readData = () => {
     .catch(e => {
       console.log(e);
     });
-  // databaseExists(dbName, function (result) {
-  //   if (result === true) {
-  //     const request = indexedDB.open(dbName, 1);
+  databaseExists(dbName, function (result) {
+    if (result === true) {
+      const request = indexedDB.open(dbName, 1);
 
-  //     arrImg.value = [];
+      arrImg.value = [];
 
-  //     request.onerror = (event) => {
-  //       console.error("Error opening database:", event.target.error);
-  //     };
+      request.onerror = (event) => {
+        console.error("Error opening database:", event.target.error);
+      };
 
-  //     request.onsuccess = (event) => {
-  //       const db = event.target.result;
+      request.onsuccess = (event) => {
+        const db = event.target.result;
 
-  //       const readTransaction = db.transaction("Step", "readonly");
-  //       const dataObjectStore = readTransaction.objectStore("Step");
+        const readTransaction = db.transaction("Step", "readonly");
+        const dataObjectStore = readTransaction.objectStore("Step");
 
-  //       const datasCursor = dataObjectStore.openCursor();
+        const datasCursor = dataObjectStore.openCursor();
 
-  //       datasCursor.onsuccess = (event) => {
-  //         const cursor = event.target.result;
+        datasCursor.onsuccess = (event) => {
+          const cursor = event.target.result;
 
-  //         if (cursor) {
-  //           arrImg.value.push(cursor.value);
-  //           cursor.continue();
-  //         } else {
-  //           console.log("Data read successfully");
-  //           db.close();
-  //         }
-  //       };
+          if (cursor) {
+            arrImg.value.push(cursor.value);
+            cursor.continue();
+          } else {
+            console.log("Data read successfully");
+            db.close();
+          }
+        };
 
-  //       datasCursor.onerror = (event) => {
-  //         console.error("Error reading data", event.target.error);
-  //         db.close();
-  //       };
-  //     };
-  //   } else {
-  //     console.log("DB NOT EXIST");
-  //   }
-  // });
+        datasCursor.onerror = (event) => {
+          console.error("Error reading data", event.target.error);
+          db.close();
+        };
+      };
+    } else {
+      console.log("DB NOT EXIST");
+    }
+  });
 };
 
 //edit function
@@ -375,7 +376,7 @@ onMounted(() => {
             <template v-slot:activator="{ props }">
               <v-list-item v-bind="props" class="step-list">
                 <v-row>
-                  <v-col cols="10">
+                  <v-col cols="12" md="10">
                     <p class="title-step">{{ item.title }}</p>
                   </v-col>
                   <v-col cols="1">
@@ -414,7 +415,7 @@ onMounted(() => {
                           </v-container>
                         </v-card-text>
 
-                        <v-container>
+                        <v-container v-if="prevImage !== null">
                           <v-spacer></v-spacer>
                           <v-row>
                             <v-col cols="12">
@@ -423,9 +424,9 @@ onMounted(() => {
                           </v-row>
                           <v-row>
                             <v-col cols="12">
-                              <template v-if="prevImage !== null">
+                              <!-- <template v-if="prevImage !== null"> -->
                                 <v-img :src="getFileImageSrc(prevImage)" max-height="250" class="img-list" />
-                              </template>
+                              <!-- </template> -->
                             </v-col>
                           </v-row>
                         </v-container>
